@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue Js</title>
+
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <style>
+        .tab-button {
+            padding: 6px 10px;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            background: #f0f0f0;
+            margin-bottom: -1px;
+            margin-right: -1px;
+        }
+        
+        .tab-button:hover {
+            background: #e0e0e0;
+        }
+        
+        .tab-button.active {
+            background: #e0e0e0;
+        }
+        
+        .tab {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity .5s;
+        }
+        
+        .fade-enter,
+        .fade-leave-to
+        /* .fade-leave-active below version 2.1.8 */
+        
+        {
+            opacity: 0;
+        }
+        
+        .slide-fade-enter-active {
+            transition: all .3s ease;
+        }
+        
+        .slide-fade-leave-active {
+            transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        }
+        
+        .slide-fade-enter,
+        .slide-fade-leave-to
+        /* .slide-fade-leave-active below version 2.1.8 */
+        
+        {
+            transform: translateX(10px);
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        {{ message }}
+        <br>
+        <span v-bind:title="messageDate">
+            Hover your mouse over me for a few seconds
+            to see my dynamically bound title!
+        </span>
+        <br>
+        <span v-if="seen">Now you see me</span>
+        <span v-else-if="elseif">Else if</span>
+        <span v-else>Now you don't see me</span>
+        <br>
+        <ol>
+            <li v-for="todo in todos">
+                {{ todo.text }}
+            </li>
+        </ol>
+        <br>
+        <p>{{ messageReverse }}</p>
+        <p>Computed reversed message: "{{ reversedMessageC }}"</p>
+        <button v-on:click="reverseMessage">Reverse Message</button>
+        <button @click="reverseMessage"> Reverse Message </button>
+        <br>
+        <p style="white-space: pre-line;">{{ messageModel }}</p>
+        <input v-model="messageModel" />
+        <textarea v-model="messageModel"></textarea>
+        <br>
+        <ol>
+            <todo-item v-for="item in groceryList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+        </ol>
+        <br>
+        <p>{{ foo }}</p>
+        <button v-on:click="foo = 'bazinga'">Change it</button>
+        <br>
+        <span v-once>This will never change: {{ messageReverse }}</span>
+        <br>
+        <p>Using mustaches: {{ rawHtml }}</p>
+        <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+        <br> {{ ok ? 'YES' : 'NO' }}
+        <br>
+        <p>
+            Ask a yes/no question:
+            <input v-model="question">
+        </p>
+        <p>{{ answer }}</p>
+        <br>
+        <template v-if="loginType === 'username'">
+            <label>Username</label>
+            <input placeholder="Enter your username" v-on:keyup.enter="loginType = ''">
+        </template>
+        <template v-else>
+            <label>Email</label>
+            <input placeholder="Enter your email address" v-on:keyup.enter="loginType = 'username'">
+        </template>
+        <br>
+        <li v-for="n in evenNumbers">{{ n }}</li>
+        <br>
+        <li v-for="n in even(numbers)">{{ n }}</li>
+        <br>
+        <span v-for="n in 10">{{ n }} </span>
+        <br>
+        <form v-on:submit.prevent="addNewTodo">
+            <label for="new-todo">Add a todo</label>
+            <input v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat">
+            <button>Add</button>
+        </form>
+        <ul>
+            <li is="todo-itemC" v-for="(todo, index) in todosC" v-bind:key="todo.id" v-bind:title="todo.title" v-on:remove="todosC.splice(index, 1)"></li>
+        </ul>
+        <br>
+        <button v-on:click="counter += 1">Add 1</button>
+        <p>The button above has been clicked {{ counter }} times.</p>
+        <br>
+        <button v-on:click="greet">Greet</button>
+        <br>
+        <button v-on:click="say('hi')">Say hi</button>
+        <button v-on:click="say('what')">Say what</button>
+        <br>
+        <button v-on:click.once="doThis">Una vez</button>
+        <br>
+        <input @keyup.alt.67="doThis" placeholder="Alt + C">
+        <br>
+        <input type="checkbox" id="checkbox" v-model="checked">
+        <label for="checkbox">{{ checked }}</label>
+        <br>
+        <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+        <label for="jack">Jack</label>
+        <input type="checkbox" id="john" value="John" v-model="checkedNames">
+        <label for="john">John</label>
+        <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+        <label for="mike">Mike</label>
+        <br>
+        <span>Checked names: {{ checkedNames }}</span>
+        <br>
+        <input type="radio" id="one" value="One" v-model="picked">
+        <label for="one">One</label>
+        <br>
+        <input type="radio" id="two" value="Two" v-model="picked">
+        <label for="two">Two</label>
+        <br>
+        <span>Picked: {{ picked }}</span>
+        <br>
+        <select v-model="selected">
+            <option disabled value="">Please select one</option>
+            <option v-for="option in options" v-bind:value="option.value">
+                {{ option.text }}
+            </option>
+          </select>
+        <span>Selected: {{ selected }}</span>
+        <br>
+        <select v-model="selectedM" multiple>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+          </select>
+        <br>
+        <span>Selected: {{ selectedM }}</span>
+        <br>
+        <button-contador-diferente></button-contador-diferente>
+        <button-contador-diferente></button-contador-diferente>
+        <button-contador-diferente></button-contador-diferente>
+        <br>
+        <button-contador-igual></button-contador-igual>
+        <button-contador-igual></button-contador-igual>
+        <button-contador-igual></button-contador-igual>
+        <br>
+        <div>
+            <button v-for="tab in tabs" v-bind:key="tab" v-on:click="currentTab = tab">{{ tab }}</button>
+            <keep-alive>
+                <component v-bind:is="currentTabComponent" class="tab"></component>
+            </keep-alive>
+        </div>
+        <br>
+        <button v-on:click="showN = !showN">
+            Toggle
+          </button>
+        <transition name="fade">
+            <p v-if="showN">hello</p>
+        </transition>
+        <br>
+        <button @click="showS = !showS">
+            Toggle render
+          </button>
+        <transition name="slide-fade">
+            <p v-if="showS">hello</p>
+        </transition>
+    </div>
+
+    <script src="./App.js"></script>
+
+</body>
+
+</html>

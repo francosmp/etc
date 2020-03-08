@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>Bomberman</title>
+  <meta name="description" content="bomberman-application">
+
+  <!-- See https://goo.gl/OOhYW5 -->
+  <link rel="manifest" href="/manifest.json">
+
+  <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+  <script type="module" src="/src/bomberman-app/bomberman-app.js" crossorigin></script>
+
+</head>
+
+<body>
+
+  <bomberman-app></bomberman-app>
+  <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=MY_KEY" async defer></script> -->
+
+</body>
+
+</html>

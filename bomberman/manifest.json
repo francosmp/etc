@@ -1,0 +1,7 @@
+{
+  "name": "bomberman",
+  "short_name": "bomberman",
+  "description": "bomberman-application",
+  "start_url": "/",
+  "display": "standalone"
+}
